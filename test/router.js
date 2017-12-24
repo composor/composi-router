@@ -24,7 +24,7 @@ describe('router basics', function(){
 		window.router = r;
 	})
 
-	it('Trigger empty router when url has not hash', function(done){
+	it('Trigger empty router when url has no hash', function(done){
 		window.location.hash = '';
 		//should be called right away since there is no hash
 		router('', function() {
@@ -142,7 +142,7 @@ describe('router basics', function(){
 		router('test6');
 	});
 
-	it('This set with data about the route', function(done) {
+	it('Access route object from route callback', function(done) {
 		router('test', function() {
 			expect(this.path).to.equal('test');
 			done();
@@ -231,5 +231,4 @@ describe('router basics', function(){
 			done();
 		}, 100);
 	});
-
 })
