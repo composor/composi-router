@@ -129,19 +129,13 @@ router('users/bob') // logs `'bob'`
 Wildcard
 --------
 
+Using `*` with catch any routes that do not match previously defined routes. Use this as a catch all for any unexpected routes or for a 404:
+
 ```javascript
 router('users/*', function() {
+  console.log('Caught unexpected route!')
 })
 router('users/12312312')
-```
-
-Catch All
----------
-
-```javascript
-router('*', function() {
-})
-router('anything')
 ```
 
 Blocking a Route
@@ -150,7 +144,7 @@ Blocking a Route
 You can block a route by returning false:
 
 ```javascript
-router('/whatever', function(name) {
+router('/whatever', function() {
     return false
 })
 ```

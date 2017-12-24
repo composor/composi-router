@@ -63,17 +63,6 @@ function Router(w, isModule) {
       }
       return true
     }
-    toURL(params) {
-      let path = this.path
-      for (let param in params) {
-        path = path.replace('/:'+param, '/'+params[param])
-      }
-      path = path.replace(/\/:.*\?/g, '/').replace(/\?/g, '')
-      if (path.indexOf(':') != -1) {
-        throw new Error('missing parameters for url: '+path)
-      }
-      return path
-    }
   }
 
   const router = function(path, fn) {
@@ -98,15 +87,6 @@ function Router(w, isModule) {
       router.reload()
     } else if (typeof fn === 'undefined') {
       router.navigate(path)
-    }
-  }
-
-  router.lookup = function(name, obj) {
-    for (let i = 0, c = routes.length; i < c; i++) {
-      let route = routes[i]
-      if (route.name == name) {
-        return route.toURL(obj)
-      }
     }
   }
 
