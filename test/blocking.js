@@ -1,70 +1,64 @@
-var jsdom = require('mocha-jsdom')
-var expect = require('chai').expect;
-var fs = require("fs");
+const jsdom = require('mocha-jsdom')
+const expect = require('chai').expect
+const fs = require("fs")
 
-describe('blocking route', function(){
+describe('blocking route', () => {
  
- 	if (typeof module != "undefined"){
+ 	if (typeof module != "undefined") {
 		jsdom({
 			src: fs.readFileSync('./index.js', 'utf-8')
 		})
 	}
 
-	beforeEach(function(done) {
-		router.removeAll();
-		window.location.hash = '';
-		setTimeout(done, 20);
-	});
+	beforeEach(done => {
+		router.removeAll()
+		window.location.hash = ''
+		setTimeout(done, 20)
+	})
 
 
-	it('route can be blocked', function(done){
-		router('name1', function() {
-			return false;
-		});
+	it('route can be blocked', function(done) {
+		router('name1', () => false)
 
-		window.location.hash = '#name1';
+		window.location.hash = '#name1'
 
-		setTimeout(function(){
-			expect(window.location.hash).to.equal("");
-			done();
-		}, 20);
-	});
+		setTimeout(() => {
+			expect(window.location.hash).to.equal("")
+			done()
+		}, 20)
+	})
 
-	it('hash reverts to last one on blocking', function(done){
-		router('name1', function(){ });
-		router('name2', function(){
-			return false;
-		});
+	it('hash reverts to last one on blocking', done => {
+		router('name1', () => {})
+		router('name2', () => false)
 
-		router('name1');
+		router('name1')
 
-		setTimeout(function(){
-			router('name2');
-			setTimeout(function(){
-				expect(window.location.hash).to.equal("#name1");
-				done();
+		setTimeout(() => {
+			router('name2')
+			setTimeout(() => {
+				expect(window.location.hash).to.equal("#name1")
+				done()
 			}, 50)
-		}, 50);
-	});
+		}, 50)
+	})
 
 	it('hash reverting doesnt trigger route second time', function(done){
-		var count = 0;
-		router('name1', function() {
-			count+=10;
-		});
-		router('name2', function() {
-			count+=1;
-			return false;
-		});
+		let count = 0
+		router('name1', () => count += 10)
+		router('name2', () => {
+			count+=1
+			return false
+		})
 
-		router('name1');
-		setTimeout(function(){
-			router('name2');
-			setTimeout(function(){
-				expect(count).to.equal(11);
-				done();
+		router('name1')
+		setTimeout(() => {
+			router('name2')
+			setTimeout(()  => {
+				expect(count).to.equal(11)
+				done()
 			}, 20)
-		}, 20);
-	});
+		}, 20)
+	})
 
 })

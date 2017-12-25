@@ -21,7 +21,7 @@ function Router(w, isModule) {
       this.keys = []
       this.fns = []
       this.params = {}
-      this.pathToRegexp = function(path, keys, sensitive, strict) {
+      this.pathToRegexp = (path, keys, sensitive, strict) => {
         if (path instanceof RegExp) return path
         if (path instanceof Array) path = '(' + path.join('|') + ')'
         path = path
@@ -102,15 +102,15 @@ function Router(w, isModule) {
   }
 
   /**
-   * This is the main constructor for routie object
+   * This is the main constructor for router object
    * Creates a route or navigates it if second parameter is empty
    * 
    * @param  {String}    path       name of to route to register or to navigate
    * @param  {Function}  fn         callback founction for this route
    * @returns {void}
    */
-  const router = function(path, fn) {
-    let addHandler = function(path, fn) {
+  const router = (path, fn) =>  {
+    let addHandler = (path, fn) => {
       let s = path.split(' ')
       let name = (s.length == 2) ? s[0] : null
       path = (s.length == 2) ? s[1] : s[0]
@@ -143,7 +143,7 @@ function Router(w, isModule) {
    * @param  {Function} fn         handler function
    * @return {void}
    */
-  router.remove = function(path, fn) {
+  router.remove = (path, fn) => {
     let route = map[path]
     if (!route)
       return
@@ -155,7 +155,7 @@ function Router(w, isModule) {
    * 
    * @return {void}
    */
-  router.removeAll = function() {
+  router.removeAll = () => {
     map = {}
     routes = []
     oldUrl = ''
@@ -168,20 +168,18 @@ function Router(w, isModule) {
    * @param  {Object} options     options for this navigate
    * @return {void}
    */
-  router.navigate = function(path, options) {
+  router.navigate = (path, options) => {
     options = options || {}
     let silent = options.silent || false
 
     if (silent) {
       removeListener()
     }
-    setTimeout(function() {
+    setTimeout(() => {
       window.location.hash = path
 
       if (silent) {
-        setTimeout(function() { 
-          addListener()
-        }, 1)
+        setTimeout(() => addListener(), 1)
       }
 
     }, 1)
@@ -191,16 +189,24 @@ function Router(w, isModule) {
    * Creates a reference for prevent conflicts
    * @return {Object}
    */
-  router.noConflict = function() {
+  router.noConflict = () => {
     w[reference] = oldReference
     return router
+  }
+
+  /**
+   * Reload the page without changing the hash
+   * @param {String} path 
+   */
+  router.load = (path) => {
+    map[path].run()
   }
 
   /**
    * Get the location hash
    * @return {String}
    */
-  const getHash = function() {
+  const getHash = () => {
     return window.location.hash.substring(1)
   }
 
@@ -209,7 +215,7 @@ function Router(w, isModule) {
    * @param {String} hash 
    * @param {String} route 
    */
-  const checkRoute = function(hash, route) {
+  const checkRoute = (hash, route) => {
     let params = []
     if (route.match(hash, params)) {
       return (route.run(params) !== false ? 1 : 0)
@@ -220,7 +226,7 @@ function Router(w, isModule) {
   /**
    * Check whether location hash has changes
    */
-  const hashChanged = router.reload = function() {
+  const hashChanged = router.reload = () => {
     let hash = getHash()
     for (let i = 0, c = routes.length; i < c; i++) {
       let route = routes[i]
@@ -240,7 +246,7 @@ function Router(w, isModule) {
   /**
    * Add haschange event listener
    */
-  const addListener = function() {
+  const addListener = () => {
     if (w.addEventListener) {
       w.addEventListener('hashchange', hashChanged, false)
     } else {
@@ -251,7 +257,7 @@ function Router(w, isModule) {
   /**
    * Remove hashchange event listener
    */
-  const removeListener = function() {
+  const removeListener = () => {
     if (w.removeEventListener) {
       w.removeEventListener('hashchange', hashChanged)
     } else {

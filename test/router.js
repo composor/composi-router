@@ -1,8 +1,8 @@
-var jsdom = require('mocha-jsdom')
-var expect = require('chai').expect;
-var fs = require("fs");
+const jsdom = require('mocha-jsdom')
+const expect = require('chai').expect
+const fs = require("fs")
 
-describe('router basics', function(){
+describe('router basics', () => {
  
  	if (typeof module != "undefined"){
 		jsdom({
@@ -11,224 +11,186 @@ describe('router basics', function(){
 	}
   
 
-	beforeEach(function(done) {
-		router.removeAll();
-		window.location.hash = '';
-		setTimeout(done, 20);
-	});
-
-
-	it('Can be initialized in non-conflict mode', function(){
-		var r = router.noConflict();
-		expect(typeof window.router).to.equal('undefined');
-		window.router = r;
+	beforeEach(done => {
+		router.removeAll()
+		window.location.hash = ''
+		setTimeout(done, 20)
 	})
 
-	it('Trigger empty router when url has no hash', function(done){
-		window.location.hash = '';
+
+	it('Can be initialized in non-conflict mode', () => {
+		const r = router.noConflict()
+		expect(typeof window.router).to.equal('undefined')
+		window.router = r
+	})
+
+	it('Trigger empty router when url has no hash', done => {
+		window.location.hash = ''
 		//should be called right away since there is no hash
-		router('', function() {
-			done();
-		});
+		router('', () => done())
 	})
 
-	it('Trigger route by its name', function(done){
-		router('test', function() {
-			done();
-		});
-		window.location.hash = '#test';
+	it('Trigger route by its name', done => {
+		router('test', () => done())
+		window.location.hash = '#test'
 	})
 
-	it('Accepts an object', function(done) {
+	it('Accepts an object', done => {
 		router({
-			'test2': function(){ done(); }
-		});
-		window.location.hash = '#test2';
-	});
+			'test2': () => done()
+		})
+		window.location.hash = '#test2'
+	})
 
-	it('Calls the same route more than once', function(done) {
-		var runCount = 0;
-		router('test8', function() {
-			runCount++;
-		});
-		router('test8', function() {
-			expect(runCount).to.equal(1);
-			done();
-		});
-		window.location.hash = '#test8';
-	});
+	it('Calls the same route more than once', done => {
+		let runCount = 0
+		router('test8', () => runCount++)
+		router('test8', () => {
+			expect(runCount).to.equal(1)
+			done()
+		})
+		window.location.hash = '#test8'
+	})
 
-	it('Navigate to hash', function(done) {
+	it('Navigate to hash', done => {
 		router('#test3')
-		setTimeout(function(){
-			expect(window.location.hash).to.equal('#test3');
-			done();
-		}, 20);
-	});
+		setTimeout(() => {
+			expect(window.location.hash).to.equal('#test3')
+			done()
+		}, 20)
+	})
 
-	it('Removes route', function(done) {
-		var check = false;
-		var test9 = function() {
-			check = true;
-		};
+	it('Removes route', done => {
+		let check = false
+		const test9 = () => check = true
 
-		router('test9', test9);
-		router.remove('test9', test9);
+		router('test9', test9)
+		router.remove('test9', test9)
 
-		window.location.hash = '#test9';
+		window.location.hash = '#test9'
 
-		setTimeout(function(){
-			expect(check).to.equal(false);
-			done();
-		}, 20);
-	});
+		setTimeout(() => {
+			expect(check).to.equal(false)
+			done()
+		}, 20)
+	})
 
-	it('Removes all routes', function(done) {
-		var check = false;
-		var test9 = function() {
-			check = true;
-		};
-		var test20 = function() {
-			check = true;
-		};
+	it('Removes all routes', done => {
+		let check = false
+		const test9 = () => check = true
+		const test20 = () => check = true
 
-		router('test9', test9);
-		router('test20', test20);
-		router.removeAll();
+		router('test9', test9)
+		router('test20', test20)
+		router.removeAll()
 
-		window.location.hash = '#test9';
+		window.location.hash = '#test9'
 
-		setTimeout(function() {
-			window.location.hash = 'test20';
-		}, 20);
-		setTimeout(function() {
-			expect(check).to.equal(false);
-			done();
-		}, 40);
-	});
+		setTimeout(() => window.location.hash = 'test20', 20)
+		setTimeout(() => {
+			expect(check).to.equal(false)
+			done()
+		}, 40)
+	})
 
-	it('Regex support', function(done) {
+	it('Regex support', done => {
 
 		router('test4/:name', function(name) {
-			expect(name).to.equal('bob');
-			expect(this.params.name).to.equal('bob');
-			done();
-		});
+			expect(name).to.equal('bob')
+			expect(this.params.name).to.equal('bob')
+			done()
+		})
 
-		router('test4/bob');
-	});
+		router('test4/bob')
+	})
 
-	it('Optional param support', function(done) {
+	it('Optional param support', done => {
 		router('test5/:name?', function(name) {
-			expect(name).to.equal(undefined);
-			expect(this.params.name).to.equal(undefined);
-			done();
-		});
+			expect(name).to.equal(undefined)
+			expect(this.params.name).to.equal(undefined)
+			done()
+		})
 
-		router('test5/');
-	});
+		router('test5/')
+	})
 
-	it('Wildcard', function(done) {
-		router('test7/*', function() {
-			done();
-		});
-		router('test7/123/123asd');
-	});
+	it('Wildcard', done => {
+		router('test7/*', () => done())
+		router('test7/123/123asd')
+	})
 
-	it('Catch all', function(done) {
-		router('*', function() {
-			done();
-		});
-		router('test6');
-	});
+	it('Catch all', done => {
+		router('*', () => done())
+		router('test6')
+	})
 
-	it('Access route object from route callback', function(done) {
+	it('Access route object from route callback', done => {
 		router('test', function() {
-			expect(this.path).to.equal('test');
-			done();
-		});
-		router('test');
-	});
+			expect(this.path).to.equal('test')
+			done()
+		})
+		router('test')
+	})
 
-	it('Double fire bug', function(done) {
-		var called = 0;
+	it('Double fire bug', done => {
+		let called = 0
 		router({
-			'splash1': function() {
-				router('splash2');
-			},
-			'splash2': function() {
-				called++;
-			}
-		});
+			'splash1': () => router('splash2'),
+			'splash2': () => called++
+		})
 
-		router('splash1');
+		router('splash1')
 
-		setTimeout(function() {
-			expect(called).to.equal(1);
-			done();
-		}, 100);
-	});
+		setTimeout(() => {
+			expect(called).to.equal(1)
+			done()
+		}, 100)
+	})
 
-	it('Only first route is run', function(done) {
-		var count = 0;
+	it('Only first route is run', done => {
+		let count = 0
 		router({
-			'test*': function() {
-				count++;
-			},
-			'test10': function() {
-				count++;
-			}
-		});
+			'test*': () => count++,
+			'test10': () => count++
+    })
 
-		router('test10');
+		router('test10')
 
-		setTimeout(function() {
-			expect(count).to.equal(1);
-			done();
-		}, 100);
-	});
+		setTimeout(() => {
+			expect(count).to.equal(1)
+			done()
+		}, 100)
+	})
 
-	it('Fallback not called if something else matches', function(done) {
-		var count = 0;
+	it('Fallback not called if something else matches', done => {
+		let count = 0
 		router({
-			'': function() {
-				//root
-			},
-			'test11': function() {
-				count++;
-			},
-			'*': function() {
-				count++;
-			}
-		});
+			'': () => {/*root*/},
+			'test11': () => count++,
+			'*': () => count++
+		})
 
-		router('test11');
+		router('test11')
 
-		setTimeout(function() {
-			expect(count).to.equal(1);
-			done();
-		}, 100);
-	});
+		setTimeout(() => {
+			expect(count).to.equal(1)
+			done()
+		}, 100)
+	})
 
-	it('Fallback called if nothing else matches', function(done) {
-		var count = 0;
+	it('Fallback called if nothing else matches', done => {
+		let count = 0
 		router({
-			'': function() {
-				//root
-			},
-			'test11': function() {
-				count++;
-			},
-			'*': function() {
-				count++;
-			}
-		});
+			'': () => { /*root*/},
+			'test11': () => count++,
+			'*': () => count++
+		})
 
-		router('test12');
+		router('test12')
 
-		setTimeout(function() {
-			expect(count).to.equal(1);
-			done();
-		}, 100);
-	});
+		setTimeout(() => {
+			expect(count).to.equal(1)
+			done()
+		}, 100)
+	})
 })

@@ -1,8 +1,8 @@
-var jsdom = require('mocha-jsdom')
-var expect = require('chai').expect;
-var fs = require("fs");
+const jsdom = require('mocha-jsdom')
+const expect = require('chai').expect
+const fs = require("fs")
 
-describe('routes navigation', function() {
+describe('routes navigation', () => {
 
 	if (typeof module != "undefined"){
 		jsdom({
@@ -10,36 +10,34 @@ describe('routes navigation', function() {
 		})
 	}
 
-	beforeEach(function(done) {
-		router.removeAll();
-		window.location.hash = '';
-		setTimeout(done, 20);
-	});
+	beforeEach(done => {
+		router.removeAll()
+		window.location.hash = ''
+		setTimeout(done, 20)
+	})
 
 
-	it('Call router.navigate to change hash', function(done) {
-		//same as router('nav-test');
-		router.navigate('nav-test');
-		setTimeout(function() {
-			expect(window.location.hash).to.equal('#nav-test');
-			done();
-		}, 20);
-	});
+	it('Call router.navigate to change hash', done => {
+		//same as router('nav-test')
+		router.navigate('nav-test')
+		setTimeout(() => {
+			expect(window.location.hash).to.equal('#nav-test')
+			done()
+		}, 20)
+	})
 
-	it('Pass in {silent: true} to not trigger route', function(done) {
+	it('Pass in {silent: true} to not trigger route', done => {
 
-		var called = 0;
+		let called = 0
 
-		router('silent-test', function() {
-			called++;
-		});
+		router('silent-test', () => called++)
 
-		router.navigate('silent-test', { silent: true });
+		router.navigate('silent-test', { silent: true })
 
-		setTimeout(function() {
-			expect(called).to.equal(0);
-			expect(window.location.hash).to.equal('#silent-test');
-			done();
-		}, 20);
-	});
-});
+		setTimeout(() => {
+			expect(called).to.equal(0)
+			expect(window.location.hash).to.equal('#silent-test')
+			done()
+		}, 20)
+	})
+})

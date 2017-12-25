@@ -1,6 +1,6 @@
 {
   "name": "composi-router",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A router for Composi, allowing conditional rendering of functional components.",
   "main": "index.js",
   "scripts": {
