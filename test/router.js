@@ -193,4 +193,21 @@ describe('router basics', () => {
 			done()
 		}, 100)
 	})
+
+  it('Should load page without changing hash', done => {
+    let count = 0
+    router({
+			'load': () => ++count
+		})
+    router.load('load')
+    setTimeout(() => { 
+      expect(count).to.equal(1)
+      done()
+      router.load('load')
+    }, 100)
+    setTimeout(() => { 
+      expect(count).to.equal(2)
+      done()
+    }, 300)
+  })
 })
