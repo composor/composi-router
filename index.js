@@ -5,7 +5,7 @@
   * Creates a Route object for general use
   * 
   * @param {String} path
-  * @param {type}   name
+  * @param {type} name
   */
 function Router(w, isModule) {
   let routes = []
@@ -53,7 +53,7 @@ function Router(w, isModule) {
     /**
      * Removes specific handler for this route
      * 
-     * @param  {Function} fn
+     * @param {Function} fn
      * @return {void}
      */
     removeHandler(fn) {
@@ -69,7 +69,7 @@ function Router(w, isModule) {
     /**
      * Executes this route with specified params
      * 
-     * @param  {Object} params
+     * @param {Object} params
      * @return {void}
      */
     run(params) {
@@ -82,8 +82,8 @@ function Router(w, isModule) {
 
     /**
      * Tests a path of this route and runs if it's successed
-     * @param  {String} path
-     * @param  {Object} params
+     * @param {String} path
+     * @param {Object} params
      * @return {Bool}
      */
     match(path, params){
@@ -105,11 +105,11 @@ function Router(w, isModule) {
    * This is the main constructor for router object
    * Creates a route or navigates it if second parameter is empty
    * 
-   * @param  {String}    path       name of to route to register or to navigate
-   * @param  {Function}  fn         callback founction for this route
+   * @param {String} path name of to route to register or to navigate
+   * @param {Function} fn callback founction for this route
    * @returns {void}
    */
-  const router = (path, fn) =>  {
+  const router = (path, fn) => {
     let addHandler = (path, fn) => {
       let s = path.split(' ')
       let name = (s.length == 2) ? s[0] : null
@@ -139,8 +139,8 @@ function Router(w, isModule) {
    * Remeber that: one path can have multiple handlers/callbacks functions
    * you should specify exact object that refers handler
    * 
-   * @param  {String}   path       target path to remove
-   * @param  {Function} fn         handler function
+   * @param  {String} path target path to remove
+   * @param  {Function} fn handler function
    * @return {void}
    */
   router.remove = (path, fn) => {
@@ -164,8 +164,8 @@ function Router(w, isModule) {
   /**
    * Navigates current route to desired one
    * 
-   * @param  {String} path        target path to navigate
-   * @param  {Object} options     options for this navigate
+   * @param  {String} path target path to navigate
+   * @param  {Object} options options for this navigate
    * @return {void}
    */
   router.navigate = (path, options) => {
@@ -193,7 +193,7 @@ function Router(w, isModule) {
     w[reference] = oldReference
     return router
   }
-
+  
   /**
    * Reload the page without changing the hash
    * @param {String} path 
@@ -206,9 +206,7 @@ function Router(w, isModule) {
    * Get the location hash
    * @return {String}
    */
-  const getHash = () => {
-    return window.location.hash.substring(1)
-  }
+  const getHash = () => window.location.hash.substring(1)
 
   /**
    * Checks to see if a hash matches a route
